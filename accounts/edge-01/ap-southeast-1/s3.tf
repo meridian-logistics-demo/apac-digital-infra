@@ -38,6 +38,19 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "edge01_catalogue_
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "edge01_catalogue_assets_01" {
+  bucket = aws_s3_bucket.edge01_catalogue_assets_01.id
+  rule {
+    id     = "archive"
+    status = "Enabled"
+    filter {}
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+  }
+}
+
 resource "aws_s3_bucket" "edge01_catalogue_assets_02" {
   bucket = "edge01-catalogue-assets-02"
   tags   = {
@@ -86,4 +99,17 @@ resource "aws_s3_bucket_logging" "edge01_catalogue_assets_02" {
   bucket        = aws_s3_bucket.edge01_catalogue_assets_02.id
   target_bucket = "audit-logs"
   target_prefix = "edge01-catalogue-assets-02/"
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "edge01_catalogue_assets_02" {
+  bucket = aws_s3_bucket.edge01_catalogue_assets_02.id
+  rule {
+    id     = "archive"
+    status = "Enabled"
+    filter {}
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+  }
 }
